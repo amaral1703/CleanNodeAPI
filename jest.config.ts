@@ -11,7 +11,13 @@ const config: Config = {
   // coverageProvider: "v8",
   transform: {
     '.+\\.ts$': 'ts-jest'
-  }
+  },
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    'src/presentation/controllers/singnup/singup-protocols.ts',
+    '.*-protocols\\.ts$',
+    'src/presentation/protocols/.*'
+  ]
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
