@@ -1,6 +1,6 @@
-import type {Config} from 'jest';
+// import type { Config } from 'jest'
 
-const config: Config = {
+module.exports = {
   roots: ['<rootDir>/src'],
   collectCoverageFrom: [
     'src/**/*.ts',
@@ -17,7 +17,7 @@ const config: Config = {
     'src/presentation/controllers/singnup/singup-protocols.ts',
     '.*-protocols\\.ts$',
     'src/presentation/protocols/.*'
-  ]
+  ],
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -181,4 +181,4 @@ const config: Config = {
   // watchman: true,
 };
 
-export default config;
+// export default config;
