@@ -1,5 +1,7 @@
 import { Collection, MongoClient } from 'mongodb'
+import { MongoMemoryServer } from 'mongodb-memory-server'
 
+export { MongoMemoryServer }
 export const MongoHelper = {
   client: null as unknown as MongoClient,
 

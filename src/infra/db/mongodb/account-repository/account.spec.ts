@@ -1,6 +1,5 @@
 // import '../../../../jest-globals'
-import { MongoMemoryServer } from 'mongodb-memory-server'
-import { MongoHelper } from '../helpers/mongo-helper'
+import { MongoHelper, MongoMemoryServer } from '../helpers/mongo-helper'
 import { AccountMongoRepository } from './account'
 
 describe('account MongoDb', () => {
@@ -18,7 +17,7 @@ describe('account MongoDb', () => {
     await accountCollection.deleteMany({})
   })
 
-  const makeSut = (): AccountMongoRepository =>{
+  const makeSut = (): AccountMongoRepository => {
     return new AccountMongoRepository()
   }
   test('should return an account on succes', async () => {
