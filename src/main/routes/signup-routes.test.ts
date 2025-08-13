@@ -11,6 +11,7 @@ describe('signup routes', () => {
   })
   afterAll(async () => {
     await MongoHelper.disconnect()
+    await mongoServer.stop()
   })
   beforeEach(async () => {
     const accountCollection = await MongoHelper.getCollection('accounts')
