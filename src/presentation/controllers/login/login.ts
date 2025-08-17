@@ -1,7 +1,6 @@
-import { Authentication } from '../../../domain/usecases/authentication'
+import { Controller, EmailValidator, HttpRequest, HttpResponse, Authentication } from './login-protocols'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 import { badRequest, serverError, unauthorized } from '../../helpers/http-helpers'
-import { Controller, EmailValidator, HttpRequest, HttpResponse } from '../../protocols'
 export class LoginController implements Controller {
   private readonly emailValidator: EmailValidator
   private readonly authentication: Authentication
@@ -27,9 +26,9 @@ export class LoginController implements Controller {
       if (!accessToken) {
         return unauthorized()
       }
-      return serverError(new Error('Unhandled case'))
+      return serverError(new ServerError('Unhandled case'))
     } catch (error) {
-      return serverError(error as Error)
+      return serverError(new ServerError(error as string))
     }
   }
 }
