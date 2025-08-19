@@ -1,6 +1,6 @@
 // import '../../../../jest-globals'
 import { MongoHelper, MongoMemoryServer } from '../helpers/mongo-helper'
-import { AccountMongoRepository } from './account'
+import { AccountMongoRepository } from './account-repository'
 
 describe('account MongoDb', () => {
   let mongoServer: MongoMemoryServer
