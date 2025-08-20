@@ -1,4 +1,4 @@
-import env from '../../config/env' 
+import env from '../../config/env'
 import { LogControllerDecorator } from '../../decorators/log-controller-decorator'
 import { makeLoginValidation } from './login-validation-factory'
 import { Controller } from '../../../presentation/protocols'
