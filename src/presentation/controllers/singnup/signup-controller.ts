@@ -1,11 +1,12 @@
-import { HttpRequest, HttpResponse, Controller, AddAccount } from './singup-controller-protocols'
+import { HttpRequest, HttpResponse, Controller, AddAccount, Authentication } from './singup-controller-protocols'
 import { badRequest, serverError, ok } from '../../helpers/http/http-helpers'
 import { Validation } from '../../protocols/validation'
 
 export class SignUpController implements Controller {
   constructor (
     private readonly addAccount: AddAccount,
-    private readonly validation: Validation
+    private readonly validation: Validation,
+    private readonly authentication: Authentication
   ) {
   }
 
@@ -18,6 +19,10 @@ export class SignUpController implements Controller {
       const { name, email, password } = httpRequest.body
       const account = await this.addAccount.add({
         name,
+        email,
+        password
+      })
+      await this.authentication.auth({
         email,
         password
       })
