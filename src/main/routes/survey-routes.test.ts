@@ -20,11 +20,11 @@ describe('survey routes', () => {
     await surveyCollection.deleteMany({})
   })
   describe('POST /surveys', () => {
-    test('Should return 204 on AddSurveySucces', async () => {
+    test('Should return 403 on AddSurvey without accessToken', async () => {
       await request(app)
         .post('/api/surveys')
         .send({
-          question: "Question",
+          question: 'Question',
           answers: [{
             answer: 'answer_1',
             image: 'http://drive.com/image_1'
@@ -32,7 +32,7 @@ describe('survey routes', () => {
             answer: 'answer_2'
           }]
         })
-        .expect(204)
+        .expect(403)
     })
   })
 })
