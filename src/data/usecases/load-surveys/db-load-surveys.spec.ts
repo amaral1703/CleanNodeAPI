@@ -31,20 +31,20 @@ const makeLoadSurveysRepository = (): LoadSurveysRepository => {
 
 interface SutTypes {
   sut: DbLoadSurveys
-  loadSurveysRepositorySutb: LoadSurveysRepository
+  loadSurveysRepositoryStub: LoadSurveysRepository
 }
 const makeSut = (): SutTypes => {
-  const loadSurveysRepositorySutb = makeLoadSurveysRepository()
-  const sut = new DbLoadSurveys(loadSurveysRepositorySutb)
+  const loadSurveysRepositoryStub = makeLoadSurveysRepository()
+  const sut = new DbLoadSurveys(loadSurveysRepositoryStub)
   return {
     sut,
-    loadSurveysRepositorySutb
+    loadSurveysRepositoryStub
   }
 }
 describe('DbLoadSurveys', () => {
   test('should call LoadSurveysRepository', async () => {
-    const { sut, loadSurveysRepositorySutb } = makeSut()
-    const loadAllSpy = jest.spyOn(loadSurveysRepositorySutb, 'loadAll')
+    const { sut, loadSurveysRepositoryStub } = makeSut()
+    const loadAllSpy = jest.spyOn(loadSurveysRepositoryStub, 'loadAll')
     await sut.load()
     expect(loadAllSpy).toHaveBeenCalled()
   })
@@ -53,5 +53,12 @@ describe('DbLoadSurveys', () => {
     const { sut } = makeSut()
     const surveys = await sut.load()
     expect(surveys).toEqual(makeFakeSurveys())
+  })
+
+  test('Should throw if LoadSurveysRepository throws', async () => {
+    const { sut, loadSurveysRepositoryStub } = makeSut()
+    jest.spyOn(loadSurveysRepositoryStub, 'loadAll').mockResolvedValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.load()
+    await expect(promise).rejects.toThrow()
   })
 })
