@@ -8,6 +8,27 @@ import env from '../config/env'
 
 let surveyCollection: Collection
 let accountCollection: Collection
+
+const makeAccessToken = async (): Promise<string> => {
+  const password = await hash('1234', 12)
+  const res = await accountCollection.insertOne({
+    name: 'gabriel',
+    email: 'gabriel@gmail.com',
+    password,
+    role: 'admin'
+  })
+  const account = await accountCollection.findOne({ _id: res.insertedId })
+  const id = account?._id
+  const accessToken = sign({ id }, env.jwtSecret)
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
 describe('survey routes', () => {
   let mongoServer: MongoMemoryServer
   beforeAll(async () => {
@@ -42,23 +63,7 @@ describe('survey routes', () => {
     })
 
     test('Should return 204 on AddSurvey with valid accessToken', async () => {
-      const password = await hash('1234', 12)
-      const res = await accountCollection.insertOne({
-        name: 'gabriel',
-        email: 'gabriel@gmail.com',
-        password,
-        role: 'admin'
-      })
-      const account = await accountCollection.findOne({ _id: res.insertedId })
-      const id = account?._id
-      const accessToken = sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -83,22 +88,6 @@ describe('survey routes', () => {
     })
 
     test('Should return 200 on LoadSurveys with valid accessToken', async () => {
-      const password = await hash('1234', 12)
-      const res = await accountCollection.insertOne({
-        name: 'gabriel',
-        email: 'gabriel@gmail.com',
-        password
-      })
-      const account = await accountCollection.findOne({ _id: res.insertedId })
-      const id = account?._id
-      const accessToken = sign({ id }, env.jwtSecret)
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
       await surveyCollection.insertMany([{
         question: 'any_question',
         answers: [{
@@ -109,6 +98,7 @@ describe('survey routes', () => {
         }],
         date: new Date()
       }])
+      const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
