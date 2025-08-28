@@ -41,7 +41,7 @@ describe('survey routes', () => {
         .expect(403)
     })
 
-    test('Should return 403 on AddSurvey with valid accessToken', async () => {
+    test('Should return 204 on AddSurvey with valid accessToken', async () => {
       const password = await hash('1234', 12)
       const res = await accountCollection.insertOne({
         name: 'gabriel',
@@ -80,6 +80,39 @@ describe('survey routes', () => {
       await request(app)
         .get('/api/surveys')
         .expect(403)
+    })
+
+    test('Should return 200 on LoadSurveys with valid accessToken', async () => {
+      const password = await hash('1234', 12)
+      const res = await accountCollection.insertOne({
+        name: 'gabriel',
+        email: 'gabriel@gmail.com',
+        password
+      })
+      const account = await accountCollection.findOne({ _id: res.insertedId })
+      const id = account?._id
+      const accessToken = sign({ id }, env.jwtSecret)
+      await accountCollection.updateOne({
+        _id: id
+      }, {
+        $set: {
+          accessToken
+        }
+      })
+      await surveyCollection.insertMany([{
+        question: 'any_question',
+        answers: [{
+          image: 'any_image',
+          answer: 'any_answer'
+        }, {
+          answer: 'other_answer'
+        }],
+        date: new Date()
+      }])
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
