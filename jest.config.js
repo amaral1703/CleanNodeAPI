@@ -9,8 +9,6 @@ module.exports = {
     '!<rootDir>/src/main/**'
   ],
   collectCoverage: true,
-  // coverageDirectory: "coverage",
-  // coverageProvider: "v8",
   transform: {
     '.+\\.ts$': 'ts-jest'
   },
@@ -20,7 +18,8 @@ module.exports = {
     '.*-protocols\\.ts$',
     'src/presentation/protocols/.*'
   ],
-  preset: '@shelf/jest-mongodb'
+  preset: '@shelf/jest-mongodb',
+  moduleNameMapper: {
+    '@/(.*)': '<rootDir>/src/$1'
+  }
 }
-
-// export default config;
