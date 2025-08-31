@@ -21,12 +21,12 @@ const makeValidation = (): Validation => {
   return new ValidationStub()
 }
 
-interface sutTypes {
+type SutTypes = {
   sut: LoginController
   authenticationStub: Authentication
   validationStub: Validation
 }
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const validationStub = makeValidation()
   const authenticationStub = makeAuthentication()
   const sut = new LoginController(validationStub, authenticationStub)
