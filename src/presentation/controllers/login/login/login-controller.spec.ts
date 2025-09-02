@@ -7,15 +7,15 @@ import { Validation } from '@/presentation/protocols/validation'
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: AuthenticationModel): Promise<string> {
-      return new Promise(resolve => resolve('any_token'))
+      return await new Promise(resolve => resolve('any_token'))
     }
   }
   return new AuthenticationStub()
 }
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate (input: any): Error {
-      return null as unknown as Error
+    validate (input: any): Error | null {
+      return null
     }
   }
   return new ValidationStub()

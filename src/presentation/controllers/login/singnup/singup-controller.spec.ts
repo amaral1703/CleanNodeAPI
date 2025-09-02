@@ -7,7 +7,7 @@ import { Validation } from '@/presentation/protocols/validation'
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (authentication: AuthenticationModel): Promise<string> {
-      return new Promise(resolve => resolve('any_token'))
+      return await new Promise(resolve => resolve('any_token'))
     }
   }
   return new AuthenticationStub()
@@ -15,8 +15,8 @@ const makeAuthentication = (): Authentication => {
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate (input: any): Error {
-      return null as unknown as Error
+    validate (input: any): Error | null {
+      return null
     }
   }
   return new ValidationStub()
@@ -24,8 +24,8 @@ const makeValidation = (): Validation => {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
+    async add (account: AddAccountModel): Promise<AccountModel | null> {
+      return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
   return new AddAccountStub()
@@ -47,7 +47,7 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'valid_password'
 
 })
-type SutTypes ={
+type SutTypes = {
   sut: SignUpController
   addAccountStub: AddAccount
   validationStub: Validation
@@ -81,7 +81,7 @@ describe('SignUp Controller', () => {
   test('Should return 500 if an AddAcount throws', async () => {
     const { sut, addAccountStub } = makeSut()
     jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
-      return new Promise((resolve, reject) => reject(new Error()))
+      return await new Promise((resolve, reject) => reject(new Error()))
     })
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new ServerError('error_stack')))
@@ -89,7 +89,7 @@ describe('SignUp Controller', () => {
 
   test('Should return 403 if AddAccount returns null', async () => {
     const { sut, addAccountStub } = makeSut()
-    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise(resolve => resolve(null as unknown as AccountModel)))
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     // jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(forbidden(new EmailInUseError()))

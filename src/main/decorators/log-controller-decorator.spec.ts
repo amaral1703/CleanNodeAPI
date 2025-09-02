@@ -7,7 +7,7 @@ import { AccountModel } from '@/domain/models/account'
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
     async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-      return new Promise(resolve => resolve(ok(makeFakeAccount())))
+      return await new Promise(resolve => resolve(ok(makeFakeAccount())))
     }
   }
   const controllerStub = new ControllerStub()
@@ -15,12 +15,12 @@ const makeController = (): Controller => {
 }
 
 const makeLogErrorRepository = (): LogErrorRepository => {
-  class logErrorRepositoryStub implements LogErrorRepository {
+  class LogErrorRepositoryStub implements LogErrorRepository {
     async logError (Stack: string): Promise<void> {
-      return new Promise(resolve => resolve())
+      return await new Promise(resolve => resolve())
     }
   }
-  return new logErrorRepositoryStub()
+  return new LogErrorRepositoryStub()
 }
 
 const makeFakeRequest = (): HttpRequest => ({

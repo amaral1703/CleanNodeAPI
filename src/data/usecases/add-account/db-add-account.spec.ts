@@ -3,8 +3,8 @@ import { DbAddAccount } from './db-add-account'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
-    async loadByEmail (email: string): Promise<AccountModel> {
-      return new Promise(resolve => resolve(null as unknown as AccountModel))
+    async loadByEmail (email: string): Promise<AccountModel | null> {
+      return await new Promise(resolve => resolve(null))
     }
   }
   return new LoadAccountByEmailRepositoryStub()
@@ -12,7 +12,7 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
 const makeHasher = (): Hasher => {
   class HasherStub implements Hasher {
     async hash (value: string): Promise<string> {
-      return new Promise(resolve => resolve('hashed_password'))
+      return await new Promise(resolve => resolve('hashed_password'))
     }
   }
   return new HasherStub()
@@ -21,7 +21,7 @@ const makeHasher = (): Hasher => {
 const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepositoryStub implements AddAccountRepository {
     async add (account: AddAccountModel): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
+      return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
   return new AddAccountRepositoryStub()

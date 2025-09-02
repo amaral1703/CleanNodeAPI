@@ -3,8 +3,8 @@ import { MongoMemoryServer } from 'mongodb-memory-server'
 
 export { MongoMemoryServer }
 export const MongoHelper = {
-  client: null as unknown as MongoClient,
-  uri: null as unknown as string,
+  client: null as MongoClient | null,
+  uri: null as string | null,
   isConnected: false as boolean,
 
   async connect (uri: any): Promise<void> {
@@ -14,16 +14,21 @@ export const MongoHelper = {
   },
 
   async disconnect (): Promise<void> {
-    await this.client.close()
-    this.client = null as unknown as MongoClient
+    if (this.client) {
+      await this.client.close()
+    }
+    this.client = null
     this.isConnected = false
   },
 
   async getCollection (name: string): Promise<Collection> {
-    if (!this.isConnected || this.client === null || this.client === undefined) {
+    if (!this.isConnected || !this.client || !this.uri) {
       await this.connect(this.uri)
     }
-    return this.client.db().collection(name)
+    if (this.client) {
+      return this.client.db().collection(name)
+    }
+    throw new Error('MongoHelper: getColletion got error')
   },
   mapArray: (collection: any[]): any[] => {
     return collection.map(c => MongoHelper.map(c))

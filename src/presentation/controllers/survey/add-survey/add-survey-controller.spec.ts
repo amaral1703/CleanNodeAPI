@@ -16,15 +16,15 @@ const makeFakeRequest = (): HttpRequest => ({
 const makeAddSurvey = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
     async add (data: AddSurveyModel): Promise<void> {
-      return new Promise(resolve => resolve())
+      return await new Promise(resolve => resolve())
     }
   }
   return new AddSurveyStub()
 }
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
-    validate (input: any): Error {
-      return null as unknown as Error
+    validate (input: any): Error | null {
+      return null
     }
   }
   return new ValidationStub()

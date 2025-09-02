@@ -9,19 +9,19 @@ const makeFakeAccount = (): AccountModel => ({
   email: 'valid_email@mail.com',
   password: 'hashed_password'
 })
- 
+
 const makeDecrypter = (): Decrypter => {
   class DecrypterStub implements Decrypter {
-    async decrypt (value: string): Promise<string> {
-      return new Promise(resolve => resolve('any_token'))
+    async decrypt (value: string): Promise<string | null> {
+      return await new Promise(resolve => resolve('any_token'))
     }
   }
   return new DecrypterStub()
 }
 const makeLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
   class LoadAccountByTokenRepositoryStub implements LoadAccountByTokenRepository {
-    async loadByToken (token: string, role?: string): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
+    async loadByToken (token: string, role?: string): Promise<AccountModel | null> {
+      return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
   return new LoadAccountByTokenRepositoryStub()
@@ -50,7 +50,7 @@ describe('DbLoadAccountByToken Usecase ', () => {
   })
   test('should return null if Decrypter returns null', async () => {
     const { sut, decrypterStub } = makeSut()
-    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(new Promise(resolve => resolve(null as unknown as string)))
+    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const account = await sut.load('any_token', 'any_role')
     expect(account).toBeNull()
   })
@@ -62,7 +62,7 @@ describe('DbLoadAccountByToken Usecase ', () => {
   })
   test('should return null if LoadAccountByTokenRepository returns null', async () => {
     const { sut, loadAccountByTokenRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(new Promise(resolve => resolve(null as unknown as AccountModel)))
+    jest.spyOn(loadAccountByTokenRepositoryStub, 'loadByToken').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const account = await sut.load('any_token', 'any_role')
     expect(account).toBeNull()
   })

@@ -12,13 +12,13 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
     return MongoHelper.map(await accountCollection.findOne({ _id: result.insertedId }))
   }
 
-  async loadByEmail (email: string): Promise<AccountModel> {
+  async loadByEmail (email: string): Promise<AccountModel | null> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({ email })
     if (account != null) {
       return MongoHelper.map(account)
     }
-    return null as unknown as AccountModel
+    return null
   }
 
   async updateAccesToken (id: string, token: string): Promise<void> {
