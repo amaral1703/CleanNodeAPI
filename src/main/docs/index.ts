@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { loginParamsSchema } from './schemas/login-params-schema'
+import { loginPath } from './paths/'
+import { badRequest, unauthorized, serverError, notFound } from './components/'
+import { accountSchema, loginParamsSchema, errorSchema } from './schemas/'
 
 export default {
   openapi: '3.0.0',
@@ -9,6 +9,10 @@ export default {
     description: 'API desenvolvida Para Estudos de Api que realiza Enquetes',
     version: '1.0.0'
   },
+  // license: {
+  //   name: 'GPL3.0',
+  //   url: 'gpl link here'
+  // },
   servers: [{
     url: '/api'
   }],
@@ -20,6 +24,13 @@ export default {
   },
   schemas: {
     account: accountSchema,
-    loginParams: loginParamsSchema
+    loginParams: loginParamsSchema,
+    error: errorSchema
+  },
+  components: {
+    badRequest,
+    serverError,
+    unauthorized,
+    notFound
   }
 }
