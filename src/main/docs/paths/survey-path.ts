@@ -6,12 +6,6 @@ export const surveyPath = {
     }],
     tags: ['Survey'],
     summary: 'API para listar todas as enquetes',
-    requestBody: {
-      content: {
-        'application/json': {
-        }
-      }
-    },
     responses: {
       200: {
         description: 'Success',
@@ -22,6 +16,36 @@ export const surveyPath = {
             }
           }
         }
+      },
+      403: {
+        $ref: '#/components/forbidden'
+      },
+      404: {
+        $ref: '#/components/notFound'
+      },
+      500: {
+        $ref: '#/components/serverError'
+      }
+    }
+  },
+  post: {
+    security: [{
+      apiKeyAuth: []
+    }],
+    tags: ['Survey'],
+    summary: 'API para criar uma enquete',
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/schemas/addSurveyParams'
+          }
+        }
+      }
+    },
+    responses: {
+      204: {
+        description: 'Success'
       },
       403: {
         $ref: '#/components/forbidden'
