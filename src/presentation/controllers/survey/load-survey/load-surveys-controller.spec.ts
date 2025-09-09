@@ -6,7 +6,7 @@ import MockDate from 'mockdate'
 const makeLoadSurveys = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
     async load (): Promise<SurveyModel[]> {
-      return await new Promise(resolve => resolve(mockSurveyModels()))
+      return await Promise.resolve(mockSurveyModels())
     }
   }
   return new LoadSurveysStub()
@@ -47,7 +47,7 @@ describe('LoadSurveys Controller', () => {
 
   test('should retrun 204 if loadSurveys returns empty', async () => {
     const { sut, loadSurveysStub } = makeSut()
-    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(new Promise((resolve) => resolve([])))
+    jest.spyOn(loadSurveysStub, 'load').mockReturnValueOnce(Promise.resolve([]))
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(noContent())
   })
