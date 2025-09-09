@@ -6,7 +6,8 @@ module.exports = {
     'src/**/*.ts',
     '!src/**/*.d.ts',
     '<rootDir>/src/**/**',
-    '!<rootDir>/src/main/**'
+    '!<rootDir>/src/main/**',
+    '!**/test/**'
   ],
   collectCoverage: true,
   transform: {

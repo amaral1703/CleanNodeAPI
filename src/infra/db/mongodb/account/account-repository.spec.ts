@@ -1,5 +1,6 @@
 import { MongoHelper, MongoMemoryServer } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { AccountMongoRepository } from './account-repository'
+import { mockAddAccountParams } from '@/domain/test'
 import { Collection } from 'mongodb'
 
 let accountCollection: Collection
@@ -25,11 +26,7 @@ describe('account MongoDb', () => {
   describe('add()', () => {
     test('should return an account on add succes', async () => {
       const sut = makeSut()
-      const account = await sut.add({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      const account = await sut.add(mockAddAccountParams())
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('any_name')
@@ -41,11 +38,7 @@ describe('account MongoDb', () => {
   describe('loadByEmail()', () => {
     test('should return an account on LoadByEmal succes', async () => {
       const sut = makeSut()
-      await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
+      await accountCollection.insertOne(mockAddAccountParams())
       const account = await sut.loadByEmail('any_email@mail.com')
       expect(account).toBeTruthy()
       if (account) {
@@ -65,12 +58,8 @@ describe('account MongoDb', () => {
   describe('UpdateAccessToken()', () => {
     test('should update the account accessToken on UpdateAccessToken succes', async () => {
       const sut = makeSut()
-      const res = await accountCollection.insertOne({
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password'
-      })
-      const fakeAccount = await accountCollection.findOne({ _id: res.insertedId})
+      const res = await accountCollection.insertOne(mockAddAccountParams())
+      const fakeAccount = await accountCollection.findOne({ _id: res.insertedId })
       expect(fakeAccount).toBeTruthy()
       if (fakeAccount) {
         expect(fakeAccount.accessToken).toBeFalsy()
